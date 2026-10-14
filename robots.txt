@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://dhruvkarai.github.io/sitemap.xml
