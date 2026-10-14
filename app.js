@@ -34,7 +34,8 @@ addEventListener('scroll',function(){b.classList.toggle('show',scrollY>900)},{pa
 })();
 (function(){var h=document.querySelector('.hero');var cs=[].slice.call(document.querySelectorAll('.card strong'));
 if(!h||!cs.length)return;var r=document.createElement('div');r.className='ribbon';r.setAttribute('aria-hidden','true');
-var t=cs.map(function(c){return '<span>'+c.textContent+'</span>'}).join('');r.innerHTML='<div>'+t+t+'</div>';h.parentNode.insertBefore(r,h.nextSibling)})();
+function mk(hid){return cs.map(function(c){var a=c.closest('a'),u=a?a.getAttribute('href'):'';return '<span><a href="'+u+'"'+(hid?' tabindex="-1" aria-hidden="true"':'')+'>'+c.textContent+'</a></span>'}).join('')}
+r.setAttribute('role','navigation');r.setAttribute('aria-label','Medicines');r.removeAttribute('aria-hidden');r.innerHTML='<div>'+mk(0)+mk(1)+'</div>';h.parentNode.insertBefore(r,h.nextSibling)})();
 
 (function(){var q=document.getElementById('q'),c=document.getElementById('count'),s=document.getElementById('sort'),g=document.getElementById('grid');if(!q||!c)return;
 var cards=[].slice.call(document.querySelectorAll('.card')),orig=cards.slice();
