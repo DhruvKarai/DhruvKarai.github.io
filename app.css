@@ -405,3 +405,37 @@ html:not([data-theme=dark]) .toc a.on,html:not([data-theme=dark]) .mtoc a.on{col
 html[data-theme=dark] .dbanner.ok{background:#12301f;border-color:#2f6a47;border-left-color:#3cb371;color:#cdeed9}
 .ribbon a{color:inherit;text-decoration:none}.ribbon a:hover,.ribbon a:focus-visible{text-decoration:underline;text-underline-offset:4px}.ribbon:hover div,.ribbon:focus-within div{animation-play-state:paused}.ribbon a:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .glnav{display:flex;flex-wrap:wrap;gap:8px;margin:26px 0 8px}.glnav a{display:inline-flex;align-items:center;justify-content:center;min-width:40px;height:40px;border-radius:10px;border:1px solid #cfd8e3;font-weight:700;text-decoration:none;color:inherit}.glnav a:hover{background:#eef3f8}.glh{font-size:28px;margin:30px 0 6px;scroll-margin-top:90px}.gl{margin:0 0 10px}.gl dt{font-weight:700;margin-top:14px;font-size:18px}.gl dd{margin:4px 0 0;line-height:1.6;max-width:68ch}html[data-theme=dark] .glnav a{border-color:#34506b}html[data-theme=dark] .glnav a:hover{background:#17324a}
+/* modal + page-open visuals */
+@view-transition{navigation:auto}
+@keyframes pgup{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:scale(.4) rotate(-40deg)}to{opacity:1;transform:none}}
+@keyframes sweep{from{transform:translateX(-110%)}to{transform:translateX(0)}}
+main#main,.layout{animation:pgup .55s cubic-bezier(.2,.7,.2,1) both}
+.dhero h1{animation:pgup .6s .05s cubic-bezier(.2,.7,.2,1) both}
+.dhero:after{animation:pop .8s .15s cubic-bezier(.2,.9,.3,1.2) both}
+.dhero .wrap:after{content:"";display:block;position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,#ffd873,#8fdcdc);animation:sweep .9s .1s ease-out both}
+.dhero{position:relative;overflow:hidden}
+.dbanner,.glance .fact,.glance>*{animation:pgup .6s .2s cubic-bezier(.2,.7,.2,1) both}
+.glance>*:nth-child(2){animation-delay:.3s}.glance>*:nth-child(3){animation-delay:.4s}
+.dmodal{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:3vh 3vw}
+.dmodal[hidden]{display:none}
+.dm-back{position:absolute;inset:0;background:rgba(6,18,30,.62);backdrop-filter:blur(6px);opacity:0;transition:opacity .24s}
+.dm-box{position:relative;width:min(1000px,100%);height:min(92vh,100%);background:#f5f0e6;border-radius:18px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.45);display:flex;flex-direction:column;opacity:0;transform:translateY(40px) scale(.94);transition:opacity .24s,transform .34s cubic-bezier(.2,.9,.3,1.1)}
+.dmodal.on .dm-back{opacity:1}.dmodal.on .dm-box{opacity:1;transform:none}
+.dm-bar{display:flex;align-items:center;gap:12px;padding:10px 14px;background:#0b2236;color:#fff}
+.dm-t{font-weight:700;flex:1;font-size:15px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dm-full{color:#8fdcdc;font-size:13px;white-space:nowrap}
+.dm-x{width:36px;height:36px;border-radius:50%;border:1px solid #3a5670;background:transparent;color:#fff;font-size:22px;line-height:1;cursor:pointer}
+.dm-x:hover,.dm-x:focus-visible{background:#17324a;outline:2px solid #8fdcdc}
+.dm-fr{flex:1;border:0;width:100%;background:#f5f0e6;opacity:0;transition:opacity .3s}
+.dmodal.ready .dm-fr{opacity:1}
+.dm-load{position:absolute;left:0;right:0;top:56px;bottom:0;display:flex;align-items:center;justify-content:center;pointer-events:none;transition:opacity .2s}
+.dm-load i{width:64px;height:26px;border-radius:99px;background:linear-gradient(90deg,#fff 50%,#ffd873 50%);border:2px solid #0b2236;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.dmodal.ready .dm-load{opacity:0}
+html.dm-lock{overflow:hidden}
+html.embed header.top,html.embed footer,html.embed .totop,html.embed #prog,html.embed .dhero .crumb{display:none!important}
+html.embed .dhero{padding-top:28px}
+html[data-theme=dark] .dm-box,html[data-theme=dark] .dm-fr{background:#0e1b2a}
+@media(max-width:600px){.dmodal{padding:0}.dm-box{border-radius:0;height:100%}.dm-full{display:none}}
+@media(prefers-reduced-motion:reduce){main#main,.layout,.dhero h1,.dhero:after,.dhero .wrap:after,.dbanner,.glance>*{animation:none!important}.dm-box,.dm-back,.dm-fr{transition:none}.dm-load i{animation:none}@view-transition{navigation:none}}

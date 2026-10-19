@@ -174,3 +174,30 @@ function docEnhance(r, on, cleanup) {
   }
 }
 docEnhance(document.body,function(t,e,f,o){t.addEventListener(e,f,o)},[]);})();
+
+(function(){
+var de=document.documentElement,emb=/[?&]embed=1/.test(location.search);
+if(emb){de.classList.add('embed');
+document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a');if(!a)return;var h=a.getAttribute('href')||'';
+if(!h||h.charAt(0)==='#'||/^(https?:|mailto:)/.test(h))return;
+if(/(^|\/)index\.html/.test(h.split('#')[0])){e.preventDefault();parent.postMessage('doc-close','*');return}
+if(/\.html/.test(h)&&!/embed=1/.test(h)){e.preventDefault();var p=h.split('#');location.href=p[0]+(p[0].indexOf('?')<0?'?':'&')+'embed=1'+(p[1]?'#'+p[1]:'')}});
+return}
+var mq=matchMedia('(prefers-reduced-motion: reduce)');
+if(!document.querySelector('a[href^="medicines/"]'))return;
+var ov,fr,ttl,full,last;
+function build(){ov=document.createElement('div');ov.className='dmodal';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-label','Medicine details');ov.hidden=true;
+ov.innerHTML='<div class="dm-back"></div><div class="dm-box"><div class="dm-bar"><span class="dm-t"></span><a class="dm-full" target="_blank" rel="noopener">Open full page</a><button class="dm-x" type="button" aria-label="Close">&times;</button></div><div class="dm-load" aria-hidden="true"><i></i></div><iframe class="dm-fr" title="Medicine details"></iframe></div>';
+document.body.appendChild(ov);fr=ov.querySelector('iframe');ttl=ov.querySelector('.dm-t');full=ov.querySelector('.dm-full');
+ov.querySelector('.dm-back').addEventListener('click',close);ov.querySelector('.dm-x').addEventListener('click',close);
+fr.addEventListener('load',function(){if(fr.src==='about:blank'||!ov.classList.contains('on'))return;ov.classList.add('ready');try{var t=fr.contentDocument.querySelector('h1');if(t)ttl.textContent=t.textContent;full.href=fr.contentWindow.location.pathname}catch(e){}});
+ov.addEventListener('keydown',function(e){if(e.key==='Tab'){var f=[].slice.call(ov.querySelectorAll('button,a[href]')).filter(function(x){return x.offsetParent});if(!f.length)return;var a=f[0],z=f[f.length-1];if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus()}}});
+}
+function open(u,from){if(!ov)build();last=from||document.activeElement;ov.classList.remove('ready');ttl.textContent='';full.href=u;fr.src=u+(u.indexOf('?')<0?'?':'&')+'embed=1';ov.hidden=false;void ov.offsetWidth;ov.classList.add('on');de.classList.add('dm-lock');ov.querySelector('.dm-x').focus();
+var s=u.replace(/^.*\//,'').replace('.html','');if(history.replaceState)history.replaceState(null,'','#'+s)}
+function close(){if(!ov||ov.hidden)return;ov.classList.remove('on');de.classList.remove('dm-lock');var d=mq.matches?0:260;setTimeout(function(){if(!ov.classList.contains('on')){ov.hidden=true;fr.src='about:blank'}},d);if(history.replaceState)history.replaceState(null,'',location.pathname+location.search);if(last&&last.focus)last.focus()}
+addEventListener('keydown',function(e){if(e.key==='Escape')close()});
+addEventListener('message',function(e){if(e.origin===location.origin&&e.data==='doc-close')close()});
+document.addEventListener('click',function(e){if(e.defaultPrevented||e.button||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;var a=e.target.closest('a[href^="medicines/"]');if(!a)return;e.preventDefault();open(a.getAttribute('href'),a)});
+var m=location.hash.match(/^#([a-z-]+)$/);if(m&&document.querySelector('a[href="medicines/'+m[1]+'.html"]'))open('medicines/'+m[1]+'.html');
+})();
